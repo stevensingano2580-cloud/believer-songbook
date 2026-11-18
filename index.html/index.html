@@ -1,12 +1,82 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html><html lang="en">
 <head>
-    <title>Believers Songbook</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
-    <h1>Believers Songbook</h1>
-    <p>Welcome to Believers Songs.</p>
-    <p>Search and enjoy your favourite hymns.</p>
-</body>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Believers Songbook</title><style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: #f2f5f2;
+}
+header {
+    background: #075b36;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+.container {
+    padding: 15px;
+}
+input {
+    width: 100%;
+    padding: 13px;
+    box-sizing: border-box;
+    border: 1px solid #aaa;
+    border-radius: 8px;
+    font-size: 16px;
+}
+.song {
+    background: white;
+    padding: 15px;
+    margin: 12px 0;
+    border-radius: 8px;
+}
+.song h3 {
+    color: #075b36;
+}
+button {
+    background: #075b36;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+}
+</style></head><body><header>
+<h1>Believers Songbook</h1>
+<p>Sing praises and worship</p>
+</header><div class="container">
+<input type="text" id="search" placeholder="Search songs..."><div id="songs">Loading songs...</div>
+</div><script>
+fetch('Songs.json')
+.then(response => response.json())
+.then(data => {
+    const songs = document.getElementById('songs');
+
+    function displaySongs(list) {
+        songs.innerHTML = '';
+
+        list.forEach(song => {
+            songs.innerHTML += `
+            <div class="song">
+                <h3>${song.title}</h3>
+                <p>${song.lyrics}</p>
+            </div>`;
+        });
+    }
+
+    displaySongs(data);
+
+    document.getElementById('search').addEventListener('input', function() {
+        const query = this.value.toLowerCase();
+
+        displaySongs(data.filter(song =>
+            JSON.stringify(song).toLowerCase().includes(query)
+        ));
+    });
+})
+.catch(() => {
+    document.getElementById('songs').innerHTML =
+    'Unable to load songs. Please check Songs.json.';
+});
+</script></body>
 </html>
